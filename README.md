@@ -1,4 +1,4 @@
-# NodeJS Authentication using MongoDB
+# NodeJS Finance_tracker using MongoDB
 ---
 ```
 npm install 
