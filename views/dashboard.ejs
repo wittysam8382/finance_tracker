@@ -1,0 +1,181 @@
+<!-- Add your CSS styles here -->
+<style>
+  #addExpenseSection,
+  #addIncomeSection,
+  #summarySection {
+    display: none;
+    /* Initially hide the sections */
+    margin-top: 20px;
+  }
+
+  #summaryTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  #summaryTable th,
+  #summaryTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+</style>
+
+<h1 class="mt-4">Dashboard</h1>
+<p class="lead mb-3">Welcome <%= name %></p>
+<a href="/users/logout" class="btn btn-secondary mt-3">Logout</a>
+
+<!-- Add Income Button -->
+<button id="addIncomeBtn" class="btn btn-success mt-3" onscroll="addIncomeSection">Add Income</button>
+<!-- Add Expense Button -->
+<button id="addExpenseBtn" class="btn btn-primary mt-3" onscroll="addExpenseSection">Add Expense</button>
+<!-- See Summary Button -->
+<button id="seeSummaryBtn" class="btn btn-info mt-3" onscroll="summarySection">See Summary</button>
+
+<!-- Add Income Section -->
+<div id="addIncomeSection">
+  <h2 class="mt-3">Add Income</h2>
+  <form id="incomeForm" action="<%=  %>">
+    <div class="form-group">
+      <label for="amountIncome">Amount:</label>
+      <input
+        type="number"
+        class="form-control"
+        id="amountIncome"
+        placeholder="Enter amount"
+        required
+      />
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit Income</button>
+  </form>
+</div>
+
+<!-- Add Expense Section -->
+<div id="addExpenseSection">
+  <h2 class="mt-3">Add Expense</h2>
+  <form id="expenseForm">
+    <div class="form-group">
+      <label for="amount">Amount:</label>
+      <input
+        type="number"
+        class="form-control"
+        id="amount"
+        placeholder="Enter amount"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="purpose">Purpose:</label>
+      <input
+        type="text"
+        class="form-control"
+        id="purpose"
+        placeholder="Enter purpose"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Expense</button>
+  </form>
+</div>
+
+<!-- Summary Table -->
+<table id="summaryTable">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Amount</th>
+      <th>Details</th>
+      <th>Action</th> <!-- New column for the delete button -->
+    </tr>
+  </thead>
+  <tbody id="summaryTableBody">
+    <% transactions.forEach(transaction => { %>
+    <tr>
+      <td><%= transaction.date %></td>
+      <td><%= transaction.type %></td>
+      <td><%= transaction.amount %></td>
+      <td><%= (transaction.type === 'Expense') ? transaction.purpose : transaction.source %></td>
+      <td>
+        <!-- Delete Button Form -->
+        <form action="/dashboard/delete/<%= transaction._id %>?_method=DELETE" method="POST"
+          class="delete-form">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+    <% }); %>
+  </tbody>
+</table>
+<p id="spendingInsights" class="mt-3"></p>
+
+<!-- JavaScript for handling button actions -->
+<script>
+  // Arrays to store expense and income data
+  var expenses = [];
+  var incomes = [];
+
+  document.getElementById("addExpenseBtn").addEventListener("click", function () {
+    showSection("addExpenseSection");
+  });
+
+  document.getElementById("addIncomeBtn").addEventListener("click", function () {
+    showSection("addIncomeSection");
+  });
+
+  // Handle expense form submission
+  document.getElementById("expenseForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    var amount = document.getElementById("amountExpense").value;
+    var purpose = document.getElementById("purposeExpense").value;
+    var date = new Date().toLocaleDateString();
+
+    // Update expense array
+    expenses.push({ date: date, amount: amount, purpose: purpose });
+
+    // Update summary table
+    updateSummaryTable(expenses, "Expense");
+
+    // You may want to add additional logic to process the expense data
+
+    // Show the summary section
+    showSection("summarySection");
+  });
+
+  // Handle income form submission
+  document.getElementById("incomeForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    var amount = document.getElementById("amountIncome").value;
+    var source = document.getElementById("sourceIncome").value;
+    var date = new Date().toLocaleDateString();
+
+    // Update income array
+    incomes.push({ date: date, amount: amount, source: source });
+
+    // Update summary table
+    updateSummaryTable(incomes, "Income");
+
+    // You may want to add additional logic to process the income data
+
+    // Show the summary section
+    showSection("summarySection");
+  });
+
+  // Function to show a specific section and hide others
+  function showSection(sectionId) {
+    var sections = ["addExpenseSection", "addIncomeSection", "summarySection"];
+    sections.forEach(function (section) {
+      document.getElementById(section).style.display = (section === sectionId) ? "block" : "none";
+    });
+  }
+
+  // Function to update the summary table with the provided data and type
+  function updateSummaryTable(data, type) {
+    var tableBody = document.getElementById("summaryTableBody");
+
+
+    // Clear previous table content
+  }
+  </script>

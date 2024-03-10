@@ -1,1 +1,9 @@
-# finance_tracker
+# NodeJS Authentication using MongoDB
+---
+```
+npm install 
+```
+---
+```
+npm run dev
+```
